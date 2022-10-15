@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mhsj.demo.mapper.IndentMapper">
+
+    <resultMap id="orderMap" type="com.mhsj.demo.pojo.Indent">
+        <id property="inId" column="in_id"></id>
+        <result property="inName" column="in_name"></result>
+        <result property="inMoney" column="in_money"></result>
+        <result property="inQuantity" column="in_quantity"></result>
+        <result property="inAddress" column="in_address"></result>
+        <result property="hoId" column="ho_id"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="inState" column="in_state"></result>
+        <result property="inPhone" column="in_phone"></result>
+        <result property="inPhoto" column="in_photo"></result>
+        <result property="start" column="start"></result>
+        <result property="end1" column="end_1"></result>
+        <result property="end2" column="end_2"></result>
+        <result property="actual1" column="actual_1"></result>
+        <result property="actual2" column="actual_2"></result>
+        <result property="nowTime" column="now_time"></result>
+
+    </resultMap>
+    <!--    List<UserOrder> getUserOrder(int userId);-->
+    <select id="getUserOrder" resultType="com.mhsj.demo.pojo.Indent" resultMap="orderMap">
+        SELECT * FROM indent WHERE user_id=#{userId} AND in_id=#{indentId};
+    </select>
+    <select id="getUserOrder1" resultType="com.mhsj.demo.pojo.Indent" resultMap="orderMap">
+        SELECT * FROM indent WHERE user_id=#{userId};
+    </select>
+
+    <!--    List<UserOrder> getOrders(@Param("id") int id);-->
+    <select id="getOrders" resultType="com.mhsj.demo.pojo.Indent" resultMap="orderMap">
+        SELECT t1.in_id,in_state,in_name,t1.in_quantity,in_money,t2.`pr_id`,ho_phone FROM indent t1
+                                                              JOIN product t2 ON t1.`in_name`=t2.`pr_name`
+                                                              JOIN horseman t3 ON t1.`ho_id`=t3.`ho_id`
+        WHERE user_id LIKE CONCAT('%',#{id},'%');
+    </select>
+
+    <!--    List<UserOrder> getOrders1(@Param("id") String id);-->
+    <select id="getOrders1" resultType="com.mhsj.demo.pojo.Indent" resultMap="orderMap">
+        SELECT t1.in_id,in_state,in_name,t1.in_quantity,in_money,t2.`pr_id` FROM indent t1
+                                                               JOIN product t2 ON t1.`in_name`=t2.`pr_name`
+        WHERE user_id LIKE CONCAT('%',#{id},'%');
+    </select>
+    <!--根据用户id查询用户地址-->
+    <select id="selectAddress" resultType="java.lang.String">
+        select user_address from users where user_id =#{userId}
+    </select>
+    <!--根据品类id查询品类-->
+    <select id="selectKind" resultType="com.mhsj.demo.pojo.Kind">
+        select * from kind where ki_id = #{kiId}
+    </select>
+    <!--根据商品类目id查询商品-->
+    <select id="selectProduct" resultType="com.mhsj.demo.pojo.Product">
+        select * from product where ki_id = #{kiId}
+    </select>
+    <!--通过关键字查询商品（用户输入的是品类时）-->
+    <select id="search" resultType="com.mhsj.demo.pojo.Product">
+        select * from product WHERE(SELECT ki_id FROM kind where ki_name like concat(concat("%",#{keyword},"%"))) = product.ki_id
+    </select>
+
+
+    <!--通过关键字查询商品（用户输入的是商品时）-->
+    <select id="search1" resultType="com.mhsj.demo.pojo.Product">
+        select * from product where pr_name like concat(concat("%",#{keyword},"%"))
+    </select>
+
+    <!--将没查到的商品反馈给商家-->
+    <insert id="noProduct">
+        insert into noproduct(no_product) values (#{keyword})
+    </insert>
+    <!--查询订单状态为2的订单个数-->
+    <select id="indentNumByState" resultType="java.lang.Integer">
+        select count(*) from indent where in_state=#{inState}
+    </select>
+
+    <!--查询订单中商品的个数-->
+    <select id="quantityByInId" resultType="java.lang.Integer">
+        select in_quantity from indent where in_id = #{inId}
+    </select>
+
+    <!--设定骑手结束时间-->
+    <update id="setTime">
+        update indent set end_2 = #{end_2} where in_id = #{inId}
+    </update>
+
+    <!--设定商家结束时间-->
+    <update id="setTime2">
+        update indent set end_1 = #{end_1} where in_id = #{inId}
+    </update>
+</mapper>

@@ -1,0 +1,39 @@
+spring:
+  # 配置数据源信息
+  datasource:
+    # 配置数据源类型
+    type: com.zaxxer.hikari.HikariDataSource
+    # 配置连接数据库信息
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://49.234.47.141:3306/MHSJ?characterEncoding=utf-8&useSSL=false
+    username: mhsj
+    password: 170018qT
+  mvc:
+    path match:
+      matching-strategy: ant_path_matcher
+
+# 配置MyBatis日志
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+
+#阿里云
+aliyun:
+  oss:
+    file:
+      endpoint: oss-cn-zhangjiakou.aliyuncs.com
+      keyid: LTAI5tKGotWG6nWJFQFZajwk
+      keysecret: ggNkuQ2qkuAVUzOAzDuzQcUuaLh14J
+      bucketname: yuhdka
+
+
+#微信小程序
+mini:
+  appid: wx1310989af9b98e70
+  secret: ef08e8101720fc8b71c77ca19cff5cfb
+
+#logging:
+#  level:
+#    root: debug
